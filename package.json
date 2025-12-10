@@ -1,13 +1,23 @@
 {
-  "name": "676767",
+  "name": "projekt03",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
-    "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+  "description": "Projekt Express + SQLite",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js",
+    "dev": "nodemon app.js",
+    "seed": "node seed.js"
   },
-  "keywords": [],
-  "author": "DK",
-  "license": "ISC",
-  "type": "module"
+  "dependencies": {
+    "express": "^4.18.2",
+    "ejs": "^3.1.9",
+    "express-ejs-layouts": "^2.5.1",
+    "sequelize": "^6.32.1",
+    "sqlite3": "^5.1.6",
+    "body-parser": "^1.20.2",
+    "method-override": "^3.0.0"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.22"
+  }
 }
