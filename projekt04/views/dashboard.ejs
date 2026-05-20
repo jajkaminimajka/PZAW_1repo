@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Dashboard</title>
+<link rel="stylesheet" href="/css/style.css">
+<link rel="shortcut icon" href="skuter.png" type="image/x-icon">
+</head>
+
+<body>
+
+<div class="container">
+
+<h1>Baza skuterów</h1>
+
+<div style="display:flex; justify-content:space-between; margin-bottom:20px;">
+
+<a href="/scooters/add">Dodaj skuter</a>
+
+<form method="POST" action="/logout">
+<button style="width:auto; padding:6px 12px;">Wyloguj</button>
+</form>
+
+</div>
+
+<ul>
+
+<% scooters.forEach(s=>{ %>
+
+<li>
+
+<strong><%= s.brand %> <%= s.model %></strong>
+
+<br>
+
+Silnik: <%= s.engine %> |
+Rok: <%= s.year %>
+
+<br>
+
+<a href="/scooters/edit/<%= s.id %>">Edytuj</a>
+
+<form style="display:inline" method="POST" action="/scooters/delete/<%= s.id %>">
+<button style="width:auto;">Usuń</button>
+</form>
+
+</li>
+
+<% }) %>
+
+</ul>
+
+</div>
+
+</body>
+</html>

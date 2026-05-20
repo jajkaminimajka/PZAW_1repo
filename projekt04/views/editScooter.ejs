@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Edytuj skuter</title>
+<link rel="stylesheet" href="/css/style.css">
+<link rel="shortcut icon" href="skuter.png" type="image/x-icon">
+</head>
+
+<body>
+
+<div class="container">
+
+<h1>Edytuj skuter</h1>
+
+<form method="POST">
+
+<label>Marka</label>
+<input name="brand" value="<%= scooter.brand %>" required>
+
+<label>Model</label>
+<input name="model" value="<%= scooter.model %>" required>
+
+<label>Pojemność silnika</label>
+<input name="engine" value="<%= scooter.engine %>">
+
+<label>Rok produkcji</label>
+<input name="year" value="<%= scooter.year %>">
+
+<label>Opis</label>
+<textarea name="description"><%= scooter.description %></textarea>
+
+<button>Zapisz zmiany</button>
+
+</form>
+
+</div>
+
+</body>
+</html>
