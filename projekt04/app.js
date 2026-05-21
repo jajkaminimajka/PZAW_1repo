@@ -83,6 +83,7 @@ app.get("/scooters/add", requireLogin, (req, res) => {
 });
 
 app.post("/scooters/add", requireLogin, (req, res) => {
+  //
   scooters.push({
     id: scooterId++,
     brand: req.body.brand,
@@ -109,6 +110,7 @@ app.get("/scooters/edit/:id", requireLogin, (req, res) => {
 });
 
 app.post("/scooters/edit/:id", requireLogin, (req, res) => {
+  //
   const scooter = scooters.find(s => s.id == req.params.id);
   if (!scooter) return res.redirect("/dashboard");
 
