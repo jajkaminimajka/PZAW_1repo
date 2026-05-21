@@ -17,7 +17,7 @@
 <a href="/scooters/add">Dodaj skuter</a>
 
 <form method="POST" action="/logout">
-<button style="width:auto; padding:6px 12px;">Wyloguj</button>
+<button style="width:auto; padding:6px 12px;" type="submit">Wyloguj</button>
 </form>
 
 </div>
@@ -40,7 +40,7 @@ Rok: <%= s.year %>
 <a href="/scooters/edit/<%= s.id %>">Edytuj</a>
 
 <form style="display:inline" method="POST" action="/scooters/delete/<%= s.id %>">
-<button style="width:auto;">Usuń</button>
+<button style="width:auto;" type="submit">Usuń</button> <!-- -->
 </form>
 
 </li>

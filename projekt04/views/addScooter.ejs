@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html>
+<html lang="pl">
 <head>
 <title>Dodaj skuter</title>
 <link rel="stylesheet" href="/css/style.css">
-<link rel="shortcut icon" href="skuter.png" type="image/x-icon">
+<link rel="shortcut icon" href="skuter.png" type="image/png">
 </head>
 
 <body>
@@ -14,11 +14,13 @@
 
 <form method="POST">
 
-<label>Marka</label>
-<input name="brand" placeholder="np. Aprilia" required>
+<label for="brand">Marka</label>
+<input id="brand" name="brand" placeholder="np. Aprilia" required>
 
-<label>Model</label>
+<label>Model
 <input name="model" placeholder="np. SR 50" required>
+</label>
+
 
 <label>Pojemność silnika</label>
 <input name="engine" placeholder="np. 50cc">
@@ -29,7 +31,7 @@
 <label>Opis</label>
 <textarea name="description" placeholder="Opis skutera"></textarea>
 
-<button>Dodaj skuter</button>
+<button type="submit">Dodaj skuter</button>
 
 </form>
 

@@ -1,7 +1,7 @@
-
+// ...
 const express = require("express");
 const session = require("express-session");
-const bcrypt = require("bcrypt");
+const bcrypt = require("bcrypt"); // argon2
 
 const app = express();
 
@@ -13,11 +13,11 @@ app.use(session({
   secret: "secretkey",
   resave: false,
   saveUninitialized: false
-}));
+})); // ...
 
-let users = [];
-let scooters = [];
-let scooterId = 1;
+let users = []; // ...
+let scooters = []; // ...
+let scooterId = 1; // ...
 
 function requireLogin(req, res, next) {
   if (!req.session.userId) return res.redirect("/login");
@@ -31,6 +31,7 @@ app.get("/", (req, res) => {
 app.get("/register", (req, res) => res.render("register"));
 
 app.post("/register", async (req, res) => {
+  // username, password 
   const { username, password } = req.body;
   const hash = await bcrypt.hash(password, 10);
 
@@ -52,7 +53,7 @@ app.post("/login", async (req, res) => {
   if (!user) return res.redirect("/login");
 
   const valid = await bcrypt.compare(password, user.password);
-  if (!valid) return res.redirect("/login");
+  if (!valid) return res.redirect("/login"); //
 
   req.session.userId = user.id;
   req.session.role = user.role;
@@ -82,6 +83,7 @@ app.get("/scooters/add", requireLogin, (req, res) => {
 });
 
 app.post("/scooters/add", requireLogin, (req, res) => {
+  //
   scooters.push({
     id: scooterId++,
     brand: req.body.brand,
@@ -108,6 +110,7 @@ app.get("/scooters/edit/:id", requireLogin, (req, res) => {
 });
 
 app.post("/scooters/edit/:id", requireLogin, (req, res) => {
+  //
   const scooter = scooters.find(s => s.id == req.params.id);
   if (!scooter) return res.redirect("/dashboard");
 
@@ -139,6 +142,7 @@ app.post("/scooters/delete/:id", requireLogin, (req, res) => {
 });
 
 (async () => {
+  // ...
   const hash = await bcrypt.hash("admin123", 10);
   users.push({
     id: 1,
