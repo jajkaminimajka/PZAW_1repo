@@ -142,6 +142,7 @@ app.post("/scooters/delete/:id", requireLogin, (req, res) => {
 });
 
 (async () => {
+  // ...
   const hash = await bcrypt.hash("admin123", 10);
   users.push({
     id: 1,
