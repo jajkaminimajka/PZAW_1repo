@@ -53,7 +53,7 @@ app.post("/login", async (req, res) => {
   if (!user) return res.redirect("/login");
 
   const valid = await bcrypt.compare(password, user.password);
-  if (!valid) return res.redirect("/login");
+  if (!valid) return res.redirect("/login"); //
 
   req.session.userId = user.id;
   req.session.role = user.role;
