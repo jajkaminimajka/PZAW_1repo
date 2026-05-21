@@ -31,6 +31,7 @@ app.get("/", (req, res) => {
 app.get("/register", (req, res) => res.render("register"));
 
 app.post("/register", async (req, res) => {
+  // username, password 
   const { username, password } = req.body;
   const hash = await bcrypt.hash(password, 10);
 
