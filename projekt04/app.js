@@ -15,9 +15,9 @@ app.use(session({
   saveUninitialized: false
 }));
 
-let users = [];
-let scooters = [];
-let scooterId = 1;
+let users = []; // ...
+let scooters = []; // ...
+let scooterId = 1; // ...
 
 function requireLogin(req, res, next) {
   if (!req.session.userId) return res.redirect("/login");
