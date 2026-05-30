@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Baza skuterów</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="shortcut icon" href="skuter.png" type="image/x-icon">
+</head>
+
+<body>
+
+<div class="container">
+
+<h1>Baza skuterów</h1>
+
+<% if(user){ %>
+
+<a href="/dashboard">Baza skuterow</a>
+
+<form method="POST" action="/logout">
+<button>Wyloguj</button>
+</form>
+
+<% } else { %>
+
+<a href="/login">Logowanie</a> |
+<a href="/register">Rejestracja</a>
+
+<% } %>
+
+</div>
+
+</body>
+</html>

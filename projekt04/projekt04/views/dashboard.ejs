@@ -1,0 +1,1 @@
+<h1>Dashboard</h1><a href='/scooters/add'>Add Scooter</a><form method='POST' action='/logout'><button>Logout</button></form><ul><% scooters.forEach(s=>{ %><li><%= s.brand %> <%= s.model %> <a href='/scooters/edit/<%= s.id %>'>Edit</a> <form style='display:inline' method='POST' action='/scooters/delete/<%= s.id %>'><button>Delete</button></form></li><% }) %></ul>
