@@ -1,153 +1,77 @@
+const express       = require("express");
+const session       = require("express-session");
+const pgSession     = require("connect-pg-simple")(session);
+const flash         = require("express-flash");
+const csrf          = require("csurf");
+const { Pool }      = require("pg");
+const argon2        = require("argon2");
 
-const express = require("express");
-const session = require("express-session");
-const bcrypt = require("bcrypt");
+const authRoutes    = require("./routes/auth");
+const scooterRoutes = require("./routes/scooters");
 
-const app = express();
+const app  = express();
+const pool = new Pool({
+  user:     process.env.PG_USER     || "postgres",
+  host:     process.env.PG_HOST     || "localhost",
+  database: process.env.PG_DB       || "scooterbase",
+  password: process.env.PG_PASSWORD || "twoje_haslo",
+  port:     Number(process.env.PG_PORT) || 5432,
+});
 
+app.locals.pool = pool;
 app.set("view engine", "ejs");
+app.set("views", "./views");
+
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static("public"));
 
 app.use(session({
-  secret: "secretkey",
-  resave: false,
-  saveUninitialized: false
+  store: new pgSession({ pool, createTableIfMissing: true }),
+  secret:            process.env.SESSION_SECRET || "zmien_mnie_na_losowy_string",
+  resave:            false,
+  saveUninitialized: false,
+  cookie: { maxAge: 7 * 24 * 60 * 60 * 1000 }, // 7 dni
 }));
 
-let users = [];
-let scooters = [];
-let scooterId = 1;
+app.use(flash());
 
-function requireLogin(req, res, next) {
-  if (!req.session.userId) return res.redirect("/login");
+const csrfProtection = csrf();
+app.use(csrfProtection);
+
+app.use((req, res, next) => {
+  res.locals.csrfToken  = req.csrfToken();
+  res.locals.userId     = req.session.userId;
+  res.locals.username   = req.session.username;
+  res.locals.role       = req.session.role;
   next();
+});
+
+app.use(authRoutes);
+app.use(scooterRoutes);
+
+app.get("/", (req, res) => res.render("index"));
+
+async function ensureAdmin() {
+  const result = await pool.query(
+    "SELECT id FROM users WHERE role = 'admin' LIMIT 1"
+  );
+  if (result.rows.length === 0) {
+    const hash = await argon2.hash("admin123");
+    await pool.query(
+      "INSERT INTO users (username, password, role) VALUES ($1, $2, 'admin')",
+      ["admin", hash]
+    );
+    console.log("Konto administratora utworzone (login: admin, hasło: admin123)");
+    console.log("Zmień hasło administratora po pierwszym logowaniu!");
+  }
 }
 
-app.get("/", (req, res) => {
-  res.render("index", { user: req.session.userId });
-});
-
-app.get("/register", (req, res) => res.render("register"));
-
-app.post("/register", async (req, res) => {
-  const { username, password } = req.body;
-  const hash = await bcrypt.hash(password, 10);
-
-  users.push({
-    id: users.length + 1,
-    username,
-    password: hash,
-    role: "user"
-  });
-
-  res.redirect("/login");
-});
-
-app.get("/login", (req, res) => res.render("login"));
-
-app.post("/login", async (req, res) => {
-  const { username, password } = req.body;
-  const user = users.find(u => u.username === username);
-  if (!user) return res.redirect("/login");
-
-  const valid = await bcrypt.compare(password, user.password);
-  if (!valid) return res.redirect("/login");
-
-  req.session.userId = user.id;
-  req.session.role = user.role;
-
-  res.redirect("/dashboard");
-});
-
-app.post("/logout", (req, res) => {
-  req.session.destroy();
-  res.redirect("/");
-});
-
-app.get("/dashboard", requireLogin, (req, res) => {
-  let userScooters;
-
-  if (req.session.role === "admin") {
-    userScooters = scooters;
-  } else {
-    userScooters = scooters.filter(s => s.ownerId === req.session.userId);
+const PORT = process.env.PORT || 8000;
+app.listen(PORT, async () => {
+  console.log(` SkuterBase działa na http://localhost:${PORT}`);
+  try {
+    await ensureAdmin();
+  } catch (err) {
+    console.error("Błąd podczas tworzenia admina:", err.message);
   }
-
-  res.render("dashboard", { scooters: userScooters });
-});
-
-app.get("/scooters/add", requireLogin, (req, res) => {
-  res.render("addScooter");
-});
-
-app.post("/scooters/add", requireLogin, (req, res) => {
-  scooters.push({
-    id: scooterId++,
-    brand: req.body.brand,
-    model: req.body.model,
-    engine: req.body.engine,
-    year: req.body.year,
-    description: req.body.description,
-    ownerId: req.session.userId
-  });
-
-  res.redirect("/dashboard");
-});
-
-app.get("/scooters/edit/:id", requireLogin, (req, res) => {
-  const scooter = scooters.find(s => s.id == req.params.id);
-  if (!scooter) return res.redirect("/dashboard");
-
-  if (req.session.role !== "admin" &&
-      scooter.ownerId !== req.session.userId) {
-    return res.send("Brak dostępu");
-  }
-
-  res.render("editScooter", { scooter });
-});
-
-app.post("/scooters/edit/:id", requireLogin, (req, res) => {
-  const scooter = scooters.find(s => s.id == req.params.id);
-  if (!scooter) return res.redirect("/dashboard");
-
-  if (req.session.role !== "admin" &&
-      scooter.ownerId !== req.session.userId) {
-    return res.send("Brak dostępu");
-  }
-
-  scooter.brand = req.body.brand;
-  scooter.model = req.body.model;
-  scooter.engine = req.body.engine;
-  scooter.year = req.body.year;
-  scooter.description = req.body.description;
-
-  res.redirect("/dashboard");
-});
-
-app.post("/scooters/delete/:id", requireLogin, (req, res) => {
-  const scooter = scooters.find(s => s.id == req.params.id);
-  if (!scooter) return res.redirect("/dashboard");
-
-  if (req.session.role !== "admin" &&
-      scooter.ownerId !== req.session.userId) {
-    return res.send("Brak dostępu");
-  }
-
-  scooters = scooters.filter(s => s.id != req.params.id);
-  res.redirect("/dashboard");
-});
-
-(async () => {
-  const hash = await bcrypt.hash("admin123", 10);
-  users.push({
-    id: 1,
-    username: "admin",
-    password: hash,
-    role: "admin"
-  });
-})();
-
-app.listen(8000, () => {
-  console.log("Server running on http://localhost:8000");
 });

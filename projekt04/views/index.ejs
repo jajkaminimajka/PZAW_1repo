@@ -1,33 +1,22 @@
 <!DOCTYPE html>
-<html>
-<head>
-    <title>Baza skuterów</title>
-    <link rel="stylesheet" href="/css/style.css">
-    <link rel="shortcut icon" href="skuter.png" type="image/x-icon">
-</head>
-
+<html lang="pl">
+<head><%- include('partials/head', { pageTitle: 'Strona główna' }) %></head>
 <body>
-
-<div class="container">
-
-<h1>Baza skuterów</h1>
-
-<% if(user){ %>
-
-<a href="/dashboard">Baza skuterow</a>
-
-<form method="POST" action="/logout">
-<button>Wyloguj</button>
-</form>
-
-<% } else { %>
-
-<a href="/login">Logowanie</a> |
-<a href="/register">Rejestracja</a>
-
-<% } %>
-
-</div>
-
+<%- include('partials/navbar') %>
+<main class="hero">
+  <div class="hero__inner">
+    <p class="hero__eyebrow">Twoja baza danych</p>
+    <h1 class="hero__title">Skuter&shy;Base</h1>
+    <p class="hero__sub">Zarządzaj swoją kolekcją skuterów w jednym miejscu.</p>
+    <div class="hero__actions">
+      <% if (userId) { %>
+        <a href="/dashboard" class="btn btn--primary btn--lg">Przejdź do dashboardu</a>
+      <% } else { %>
+        <a href="/register" class="btn btn--primary btn--lg">Zacznij teraz</a>
+        <a href="/login"    class="btn btn--outline btn--lg">Mam już konto</a>
+      <% } %>
+    </div>
+  </div>
+</main>
 </body>
 </html>

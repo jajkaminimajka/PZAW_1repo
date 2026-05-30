@@ -1,30 +1,43 @@
 <!DOCTYPE html>
-<html>
-<head>
-<title>Logowanie</title>
-<link rel="stylesheet" href="/css/style.css">
-<link rel="shortcut icon" href="skuter.png" type="image/x-icon">
-</head>
-
+<html lang="pl">
+<head><%- include('partials/head', { pageTitle: 'Logowanie' }) %></head>
 <body>
+<%- include('partials/navbar') %>
+<main class="page-center">
+  <div class="card">
+    <h1 class="card__title">Logowanie</h1>
+    <%- include('partials/flash') %>
 
-<div class="container">
+    <% if (errors && errors.length) { %>
+      <ul class="error-list">
+        <% errors.forEach(e => { %><li><%= e %></li><% }) %>
+      </ul>
+    <% } %>
 
-<h1>Logowanie</h1>
+    <form method="POST" action="/login" novalidate>
+      <input type="hidden" name="_csrf" value="<%= csrfToken %>">
 
-<form method="POST">
+      <div class="form-group">
+        <label for="username">Nazwa użytkownika</label>
+        <input
+          type="text" id="username" name="username"
+          value="<%= (old && old.username) || '' %>"
+          autocomplete="username" required>
+      </div>
 
-<label>Login</label>
-<input name="username" required>
+      <div class="form-group">
+        <label for="password">Hasło</label>
+        <input type="password" id="password" name="password"
+          autocomplete="current-password" required>
+      </div>
 
-<label>Hasło</label>
-<input type="password" name="password" required>
+      <button type="submit" class="btn btn--primary btn--full">Zaloguj się</button>
+    </form>
 
-<button>Zaloguj</button>
-
-</form>
-
-</div>
-
+    <p class="card__footer-text">
+      Nie masz konta? <a href="/register">Zarejestruj się</a>
+    </p>
+  </div>
+</main>
 </body>
 </html>

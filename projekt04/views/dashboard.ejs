@@ -1,55 +1,49 @@
 <!DOCTYPE html>
-<html>
-<head>
-<title>Dashboard</title>
-<link rel="stylesheet" href="/css/style.css">
-<link rel="shortcut icon" href="skuter.png" type="image/x-icon">
-</head>
-
+<html lang="pl">
+<head><%- include('partials/head', { pageTitle: 'Dashboard' }) %></head>
 <body>
+<%- include('partials/navbar') %>
+<main class="page-wide">
+  <%- include('partials/flash') %>
 
-<div class="container">
+  <div class="dash-header">
+    <h1 class="page-title">
+      <% if (role === 'admin') { %>Wszystkie skutery<% } else { %>Moje skutery<% } %>
+    </h1>
+    <a href="/scooters/add" class="btn btn--primary">+ Dodaj skuter</a>
+  </div>
 
-<h1>Baza skuterów</h1>
-
-<div style="display:flex; justify-content:space-between; margin-bottom:20px;">
-
-<a href="/scooters/add">Dodaj skuter</a>
-
-<form method="POST" action="/logout">
-<button style="width:auto; padding:6px 12px;">Wyloguj</button>
-</form>
-
-</div>
-
-<ul>
-
-<% scooters.forEach(s=>{ %>
-
-<li>
-
-<strong><%= s.brand %> <%= s.model %></strong>
-
-<br>
-
-Silnik: <%= s.engine %> |
-Rok: <%= s.year %>
-
-<br>
-
-<a href="/scooters/edit/<%= s.id %>">Edytuj</a>
-
-<form style="display:inline" method="POST" action="/scooters/delete/<%= s.id %>">
-<button style="width:auto;">Usuń</button>
-</form>
-
-</li>
-
-<% }) %>
-
-</ul>
-
-</div>
-
+  <% if (scooters.length === 0) { %>
+    <div class="empty-state">
+      <p>Brak skuterów w bazie. <a href="/scooters/add">Dodaj pierwszy!</a></p>
+    </div>
+  <% } else { %>
+    <ul class="scooter-list">
+      <% scooters.forEach(s => { %>
+        <li class="scooter-card">
+          <div class="scooter-card__info">
+            <strong class="scooter-card__name"><%= s.brand %> <%= s.model %></strong>
+            <span class="scooter-card__meta">
+              <% if (s.engine_capacity) { %>🔧 <%= s.engine_capacity %> cc&nbsp;&nbsp;<% } %>
+              <% if (s.year) { %>📅 <%= s.year %><% } %>
+              <% if (role === 'admin') { %>&nbsp;&nbsp;👤 <%= s.owner_name %><% } %>
+            </span>
+            <% if (s.description) { %>
+              <p class="scooter-card__desc"><%= s.description %></p>
+            <% } %>
+          </div>
+          <div class="scooter-card__actions">
+            <a href="/scooters/edit/<%= s.id %>" class="btn btn--ghost btn--sm">Edytuj</a>
+            <form method="POST" action="/scooters/delete/<%= s.id %>" class="inline-form"
+                  onsubmit="return confirm('Czy na pewno chcesz usunąć ten skuter?')">
+              <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+              <button type="submit" class="btn btn--danger btn--sm">Usuń</button>
+            </form>
+          </div>
+        </li>
+      <% }) %>
+    </ul>
+  <% } %>
+</main>
 </body>
 </html>
