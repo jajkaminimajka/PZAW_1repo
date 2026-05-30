@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head><%- include('partials/head', { pageTitle: 'Rejestracja' }) %></head>
+<body>
+<%- include('partials/navbar') %>
+<main class="page-center">
+  <div class="card">
+    <h1 class="card__title">Rejestracja</h1>
+
+    <% if (errors && errors.length) { %>
+      <ul class="error-list">
+        <% errors.forEach(e => { %><li><%= e %></li><% }) %>
+      </ul>
+    <% } %>
+
+    <form method="POST" action="/register" novalidate>
+      <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+
+      <div class="form-group">
+        <label for="username">Nazwa użytkownika</label>
+        <input
+          type="text" id="username" name="username"
+          value="<%= (old && old.username) || '' %>"
+          minlength="3" maxlength="50"
+          autocomplete="username" required>
+        <span class="form-hint">3–50 znaków, tylko litery, cyfry i podkreślenia.</span>
+      </div>
+
+      <div class="form-group">
+        <label for="password">Hasło</label>
+        <input type="password" id="password" name="password"
+          minlength="6" autocomplete="new-password" required>
+        <span class="form-hint">Minimum 6 znaków.</span>
+      </div>
+
+      <div class="form-group">
+        <label for="password2">Powtórz hasło</label>
+        <input type="password" id="password2" name="password2"
+          minlength="6" autocomplete="new-password" required>
+      </div>
+
+      <button type="submit" class="btn btn--primary btn--full">Utwórz konto</button>
+    </form>
+
+    <p class="card__footer-text">
+      Masz już konto? <a href="/login">Zaloguj się</a>
+    </p>
+  </div>
+</main>
+</body>
+</html>

@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head><%- include('partials/head', { pageTitle: 'Błąd' }) %></head>
+<body>
+<%- include('partials/navbar') %>
+<main class="page-center">
+  <div class="card">
+    <h1 class="card__title card__title--error">Błąd</h1>
+    <p class="error-message"><%= message || 'Wystąpił nieoczekiwany błąd.' %></p>
+    <a href="/dashboard" class="btn btn--primary btn--full">Wróć do dashboardu</a>
+  </div>
+</main>
+</body>
+</html>

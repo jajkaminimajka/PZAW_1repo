@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head><%- include('partials/head', { pageTitle: 'Dodaj skuter' }) %></head>
+<body>
+<%- include('partials/navbar') %>
+<main class="page-center">
+  <div class="card card--wide">
+    <h1 class="card__title">Dodaj skuter</h1>
+
+    <% if (errors && errors.length) { %>
+      <ul class="error-list">
+        <% errors.forEach(e => { %><li><%= e %></li><% }) %>
+      </ul>
+    <% } %>
+
+    <form method="POST" action="/scooters/add" novalidate>
+      <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="brand">Marka <span class="required">*</span></label>
+          <input type="text" id="brand" name="brand"
+            value="<%= (old && old.brand) || '' %>"
+            placeholder="np. Aprilia" maxlength="100" required>
+        </div>
+        <div class="form-group">
+          <label for="model">Model <span class="required">*</span></label>
+          <input type="text" id="model" name="model"
+            value="<%= (old && old.model) || '' %>"
+            placeholder="np. SR 50" maxlength="100" required>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="engine_capacity">Pojemność silnika (cc)</label>
+          <input type="number" id="engine_capacity" name="engine_capacity"
+            value="<%= (old && old.engine_capacity) || '' %>"
+            placeholder="np. 50" min="1" max="2000">
+        </div>
+        <div class="form-group">
+          <label for="year">Rok produkcji</label>
+          <input type="number" id="year" name="year"
+            value="<%= (old && old.year) || '' %>"
+            placeholder="np. 2020" min="1900" max="<%= new Date().getFullYear() + 1 %>">
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="description">Opis</label>
+        <textarea id="description" name="description"
+          placeholder="Krótki opis skutera..."><%= (old && old.description) || '' %></textarea>
+      </div>
+
+      <div class="form-actions">
+        <a href="/dashboard" class="btn btn--ghost">Anuluj</a>
+        <button type="submit" class="btn btn--primary">Dodaj skuter</button>
+      </div>
+    </form>
+  </div>
+</main>
+</body>
+</html>

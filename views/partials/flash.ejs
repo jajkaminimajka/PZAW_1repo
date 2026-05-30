@@ -1,0 +1,8 @@
+<% const successMsg = messages.success && messages.success[0]; %>
+<% const errorMsg  = messages.error  && messages.error[0]; %>
+<% if (successMsg) { %>
+  <div class="alert alert--success" role="alert"><%= successMsg %></div>
+<% } %>
+<% if (errorMsg) { %>
+  <div class="alert alert--error" role="alert"><%= errorMsg %></div>
+<% } %>

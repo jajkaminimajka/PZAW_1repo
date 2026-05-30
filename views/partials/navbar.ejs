@@ -1,0 +1,19 @@
+<nav class="navbar">
+  <a class="navbar__brand" href="/">🛵 SkuterBase</a>
+  <div class="navbar__right">
+    <% if (userId) { %>
+      <span class="navbar__user">
+        👤 <strong><%= username %></strong>
+        <% if (role === 'admin') { %><span class="badge">admin</span><% } %>
+      </span>
+      <a href="/dashboard" class="btn btn--ghost btn--sm">Dashboard</a>
+      <form method="POST" action="/logout" class="inline-form">
+        <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+        <button type="submit" class="btn btn--outline btn--sm">Wyloguj</button>
+      </form>
+    <% } else { %>
+      <a href="/login"    class="btn btn--ghost btn--sm">Logowanie</a>
+      <a href="/register" class="btn btn--primary btn--sm">Rejestracja</a>
+    <% } %>
+  </div>
+</nav>
