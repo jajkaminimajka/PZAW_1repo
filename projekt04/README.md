@@ -1,64 +1,86 @@
+# ScooterBase
 
-Aplikacja webowa do zarządzania bazą skuterów. Node.js + Express + PostgreSQL.
+---
 
-## Wymagania
+##  MacOS
 
-- [Node.js](https://nodejs.org/) >= 18
-- PostgreSQL >= 14
-
-## Instalacja
-
-### 1. Zainstaluj PostgreSQL
-
-**Mac (Homebrew):**
+**1. Zainstaluj Node.js i PostgreSQL przez Homebrew**
 ```bash
-brew install postgresql@16
+brew install node postgresql@16
+echo 'export PATH="/opt/homebrew/opt/postgresql@16/bin:$PATH"' >> ~/.zshrc
+source ~/.zshrc
 brew services start postgresql@16
-echo 'export PATH="/opt/homebrew/opt/postgresql@16/bin:$PATH"' >> ~/.zshrc && source ~/.zshrc
 ```
 
-**Windows:** pobierz instalator z https://www.postgresql.org/download/windows/
+**2. Sklonuj projekt**
+```bash
+git clone https://github.com/jajkaminimajka/PZAW_1repo.git
+cd PZAW_1repo/projekt04
+```
 
-### 2. Utwórz bazę danych
-
+**3. Stwórz bazę danych**
 ```bash
 psql postgres -c "CREATE DATABASE scooterbase;"
 psql scooterbase < database.sql
 ```
 
-### 3. Zainstaluj zależności
+**4. W pliku `app.js` zmień dane bazy danych**
+```js
+user: "twoja_nazwa",   // sprawdź komendą: whoami
+password: "",          // zostaw puste jeśli brak hasła
+```
 
+**5. Uruchom**
 ```bash
 npm install
-```
-
-### 4. Ustaw zmienne środowiskowe
-
-**Mac/Linux:**
-```bash
-export PG_USER=twoja_nazwa_systemowa   # sprawdź: whoami
-export PG_PASSWORD=twoje_haslo         # pomiń jeśli brak hasła
-```
-
-**Windows (PowerShell):**
-```powershell
-$env:PG_USER="postgres"
-$env:PG_PASSWORD="twoje_haslo"
-```
-
-### 5. Uruchom
-
-```bash
 npm start
 ```
 
-Otwórz: **http://localhost:8000**
+---
 
-## Konto administratora
+## Windows
 
-Tworzone automatycznie przy pierwszym uruchomieniu.
+**1. Zainstaluj Node.js i Git**
 
-| Login | Hasło |
-|-------|-------|
-| admin | admin123 |
+Pobierz i zainstaluj instalatory ze stron:
+- https://nodejs.org *(wersja LTS)*
+- https://git-scm.com
 
+**2. Sklonuj projekt** *(otwórz cmd lub PowerShell)*
+```cmd
+git clone https://github.com/jajkaminimajka/PZAW_1repo.git
+cd PZAW_1repo\projekt04
+```
+
+**3. Zainstaluj PostgreSQL**
+
+Pobierz z https://postgresql.org/download/windows i zainstaluj. Podczas instalacji zapamiętaj hasło do użytkownika `postgres`.
+
+**4. Stwórz bazę danych** *(otwórz SQL Shell z menu Start, naciśnij Enter kilka razy, wpisz hasło)*
+```sql
+CREATE DATABASE scooterbase;
+\q
+```
+Następnie załaduj tabele:
+```cmd
+psql -U postgres -d scooterbase -f database.sql
+```
+
+**5. W pliku `app.js` zmień dane bazy danych**
+```js
+user: "postgres",
+password: "twoje_haslo",  // hasło z instalacji PostgreSQL
+```
+
+**6. Uruchom**
+```cmd
+npm install
+npm start
+```
+
+---
+
+
+Otwórz: http://localhost:8000
+
+> Login: `admin` &nbsp;|&nbsp; Hasło: `admin123`
